@@ -21,7 +21,6 @@ Fetch autocomplete suggestions from Google Search. Use responsibly. Not affiliat
 >>> len(q.suggestions)
 20
 >>> q.suggestions[0:5]
-
 [{'relevance': 800,
   'text': u'is allen iverson broke',
   'title': u'',
