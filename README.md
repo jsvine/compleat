@@ -2,6 +2,10 @@
 
 Fetch autocomplete suggestions from Google Search. Use responsibly. Not affiliated with Google.
 
+## Installation
+
+`pip install compleat`
+
 ## Usage
 
 `compleat` can be used as either a Python library or command-line tool.
