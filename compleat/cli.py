@@ -1,9 +1,9 @@
 import compleat
+from compleat.output import to_db, to_csv, to_json
 import argparse
 import itertools
 import time
 import sys
-import codecs
 
 parser = argparse.ArgumentParser(
     description="Retreive autocomplete suggetions, and output results as CSV [default] or JSON, or store in a database.")
@@ -44,38 +44,6 @@ parser.add_argument("--wait",
 
 args = parser.parse_args()
 
-def to_db(db_str, queries):
-    import dataset
-    db = dataset.connect(args.db)
-    query_table = db.get_table("queries")
-    suggestion_table = db.get_table("suggestions")
-    for q in queries:
-        query_table.insert(q.meta)
-        suggestion_table.insert_many([
-            dict(s.items() + {
-                "query_uid": q.uid
-            }.items()) for s in q.suggestions
-        ])
-
-def to_csv(queries):
-    import unicodecsv
-    fieldnames = queries[0].meta.keys() + \
-        queries[0].suggestions[0].keys()
-    writer = unicodecsv.DictWriter(sys.stdout, fieldnames)
-    writer.writeheader()
-    for q in queries:
-        for s in q.suggestions:
-            row_dict = dict(q.meta.items() + s.items())
-            writer.writerow(row_dict)
-
-def to_json(queries):
-    import json
-    def convert(query):
-        sugg_tuple = ("suggestions", query.suggestions)
-        return dict(query.meta.items() + [ sugg_tuple ])
-    obj = map(convert, queries)
-    json.dump(obj, sys.stdout)
-
 def log_query(query_string, lang):
     if args.silent: return
     sys.stderr.write("{lang}: {query}\n".format(
@@ -92,7 +60,7 @@ def main():
     templated = map(args.template.format, args.queries)
     combos = itertools.product(templated, args.languages)
     queries = [ exec_query(*c) for c in combos ]
-    if args.db: to_db(args.db, queries)
+    if args.db: to_db(queries, args.db)
     elif args.json: to_json(queries)
     else: to_csv(queries)
 

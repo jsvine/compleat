@@ -7,7 +7,7 @@ if sys.version_info <= (2, 6):
 
 setup(
     name='compleat',
-    version='0.0.0',
+    version='0.0.1',
     description="Fetch autocomplete suggestions from Google Search. Use responsibly. Not affiliated with Google.",
     long_description="",
     classifiers=[
@@ -39,7 +39,7 @@ setup(
     test_suite='test',
     entry_points={
         'console_scripts': [
-            'compleat = compleat.output.cli:main',
+            'compleat = compleat.cli:main',
         ]
     }
 )
