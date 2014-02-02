@@ -7,7 +7,7 @@ if sys.version_info <= (2, 6):
 
 setup(
     name='compleat',
-    version='0.0.1',
+    version='0.0.2',
     description="Fetch autocomplete suggestions from Google Search. Use responsibly. Not affiliated with Google.",
     long_description="",
     classifiers=[

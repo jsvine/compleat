@@ -13,12 +13,12 @@ class Query(object):
         self.timestamp = datetime.datetime.now()
         self.rand = str(random.random())
         req = requests.get(self.url)
-        utf8 = req.content.decode("latin-1").encode("utf-8")
-        self.response = json.loads(utf8)
+        self.response = req.json()
 
     @property
     def url(self):
-        escaped = urllib.quote(self.query)
+        encoded = self.query.encode("utf-8")
+        escaped = urllib.quote(encoded)
         return self.URL_TEMPLATE.format(
             query=escaped,
             lang=self.lang)
@@ -46,7 +46,7 @@ class Query(object):
             self.lang,
             self.timestamp.ctime(),
             self.rand
-        ])
+        ]).encode("utf-8")
         return hashlib.md5(_).hexdigest()
 
     @property

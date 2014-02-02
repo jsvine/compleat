@@ -5,6 +5,10 @@ import itertools
 import time
 import sys
 
+encoding = sys.stdin.encoding
+def cli_decode(string):
+    return string.decode(encoding)
+
 parser = argparse.ArgumentParser(
     description="Retreive autocomplete suggetions, and output results as CSV [default] or JSON, or store in a database.")
 
@@ -12,16 +16,19 @@ parser.add_argument("--queries",
     "-q",
     nargs="+",
     required=True,
+    type=cli_decode,
     help="Queries to execute. Space-delimited. If --template is provided, query is first substituted into the template.")
 
 parser.add_argument("--template",
     "-t",
     default="{}",
+    type=cli_decode,
     help="String describing the shape of the query. {}s will be replaced by the values supplied to --queries. Default: '{}'")
 
 parser.add_argument("--languages",
     "-l",
     nargs="+",
+    type=cli_decode,
     default=["en"],
     help="Languages (as two-letter codes) to search with. Default: 'en'")
 
@@ -46,9 +53,9 @@ args = parser.parse_args()
 
 def log_query(query_string, lang):
     if args.silent: return
-    sys.stderr.write("{lang}: {query}\n".format(
-        lang=lang,
-        query=query_string))
+    template = u"{lang}: {query}\n"
+    msg = template.format(lang=lang, query=query_string)
+    sys.stderr.write(msg)
     
 def exec_query(query_string, lang):
     time.sleep(args.wait)
